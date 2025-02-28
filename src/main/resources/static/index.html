@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Propiedades</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .property-list { margin-top: 20px; }
+        .property { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+<h2>Registrar Propiedad</h2>
+<form id="propertyForm">
+    <input type="text" id="address" placeholder="Dirección" required>
+    <input type="number" id="price" placeholder="Precio" required>
+    <input type="number" id="size" placeholder="Tamaño (m²)" required>
+    <textarea id="description" placeholder="Descripción"></textarea>
+    <button type="submit">Agregar</button>
+</form>
+
+<h2>Lista de Propiedades</h2>
+<div id="propertyList" class="property-list"></div>
+
+<script>
+    const API_URL = "http://localhost:8080/api/properties";
+
+    document.getElementById("propertyForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const property = {
+            address: document.getElementById("address").value,
+            price: parseFloat(document.getElementById("price").value),
+            size: parseFloat(document.getElementById("size").value),
+            description: document.getElementById("description").value
+        };
+        await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(property)
+        });
+        loadProperties();
+        e.target.reset();
+    });
+
+    async function loadProperties() {
+        const response = await fetch(API_URL);
+        const properties = await response.json();
+        const list = document.getElementById("propertyList");
+        list.innerHTML = "";
+        properties.forEach(prop => {
+            list.innerHTML += `
+                <div class="property">
+                    <p><strong>${prop.address}</strong></p>
+                    <p>Precio: $${prop.price}</p>
+                    <p>Tamaño: ${prop.size} m²</p>
+                    <p>${prop.description}</p>
+                    <button onclick="deleteProperty(${prop.id})">Eliminar</button>
+                </div>`;
+        });
+    }
+
+    async function deleteProperty(id) {
+        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+        loadProperties();
+    }
+
+    loadProperties();
+</script>
+</body>
+</html>
