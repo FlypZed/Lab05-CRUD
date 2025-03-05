@@ -18,13 +18,11 @@ public class PropertyController {
         this.propertyService = propertyService;
     }
 
-    // Obtener todas las propiedades
     @GetMapping
     public List<Property> getAllProperties() {
         return propertyService.getAllProperties();
     }
 
-    // Obtener una propiedad por ID
     @GetMapping("/{id}")
     public ResponseEntity<Property> getPropertyById(@PathVariable Long id) {
         Optional<Property> property = propertyService.getPropertyById(id);
@@ -32,14 +30,12 @@ public class PropertyController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Crear una nueva propiedad
     @PostMapping
     public ResponseEntity<Property> createProperty(@RequestBody Property property) {
         Property savedProperty = propertyService.createProperty(property);
         return ResponseEntity.ok(savedProperty);
     }
 
-    // Actualizar una propiedad existente
     @PutMapping("/{id}")
     public ResponseEntity<Property> updateProperty(@PathVariable Long id, @RequestBody Property property) {
         try {
@@ -50,7 +46,6 @@ public class PropertyController {
         }
     }
 
-    // Eliminar una propiedad por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProperty(@PathVariable Long id) {
         try {

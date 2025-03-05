@@ -22,11 +22,9 @@ public class Property {
     @Column(length = 500)
     private String description;
 
-    // Constructor vacío requerido por JPA
     public Property() {
     }
 
-    // Constructor con parámetros
     public Property(String address, Double price, Double size, String description) {
         this.address = address;
         this.price = price;
@@ -34,7 +32,6 @@ public class Property {
         this.description = description;
     }
 
-    // Getters y Setters
     public Long getId() {
         return id;
     }
